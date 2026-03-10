@@ -1,7 +1,5 @@
 # DIY Home Powerbank 24V 8kWh — Dokumentacja projektu v4
 
-> **Aktualizacja v4:** Usunięto LM2596 USB z BOM. Zasilanie ESP wyłącznie przez moduł Dual TYPE-C DC-DC. Uproszczono schematy.
-
 ---
 
 ## 1. Założenia systemu
@@ -140,7 +138,7 @@ Zasilanie BMS — samodzielne:
 ```
 [JK BMS]
     ├─ Bluetooth ────────────────────────────────────► [ESP32]
-    │                                                      │ WiFi → MQTT
+    │                                                  │ WiFi → MQTT
     └─ RS485 A/B ──► [MAX3232 TTL] ──► UART ──► [D1 Mini]
                                                        │ WiFi → MQTT
                                                        │
@@ -161,9 +159,8 @@ RS485-B ─────────────── B                         
 GND ─────────────────── GND ──────────────────── GND   │
                          TX ───────────────────── RX (D7/GPIO13)
                          RX ───────────────────── TX (D8/GPIO15)
-                        VCC ──────────────────── 3.3V
+                        VCC ──────────────────── 5V
 
-Zasilanie MAX3232: 3.3V z Wemos D1 Mini (nie z 5V!)
 ```
 
 ---
