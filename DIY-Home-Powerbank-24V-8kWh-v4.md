@@ -29,11 +29,10 @@
 | 4 | [ESP32-WROOM-32U DevKit](https://pl.aliexpress.com/item/1005010136688086.html) | 1Set-Type-C (z anteną) | 26,69 zł | ✅ Zamówione |
 | 5 | [ANL holder osobny](https://pl.aliexpress.com/item/1005001282853678.html) | Gniazdo/200A | 29,99 zł | ✅ Zamówione |
 | 6 | [DC switch 1P 150A](https://pl.aliexpress.com/item/1005008516700696.html) | 150A/1 | 54,99 zł |  ✅ Zamówione |
-| 7 | [Kabel DC 25mm² z końcówkami](https://pl.aliexpress.com/item/1005003444381103.html) | ~2m | ~38 zł |  ✅ Zamówione |
-| 8 | [Dual TYPE-C DC-DC 6V-36V→5V 3A](https://pl.aliexpress.com/item/1005007422356449.html) | 1PCS | 5,40 zł | ✅ Zamówione |
-| 9 | [Kabel USB-C do USB-C 60W 25cm](https://pl.aliexpress.com/item/1005006350363185.html) | czarny/0,25m × 2 | 2,68 zł | ✅ Zamówione |
+| 7 | [Dual TYPE-C DC-DC 6V-36V→5V 3A](https://pl.aliexpress.com/item/1005007422356449.html) | 1PCS | 5,40 zł | ✅ Zamówione |
+| 8 | [Kabel USB-C do USB-C 60W 25cm](https://pl.aliexpress.com/item/1005006350363185.html) | czarny/0,25m × 2 | 2,68 zł | ✅ Zamówione |
 
-**Łączny koszt AliExpress: ~2 841 zł**
+**Łączny koszt AliExpress: ~2 803 zł**
 
 ### 2.2 Do kupienia lokalnie
 
@@ -43,14 +42,15 @@
 | 2 | Podkładki M6 | 50 szt. | ~8 zł |
 | 3 | Nakrętki M6 | 25 szt. | ~8 zł |
 | 4 | Obudowa niemetalowa na ogniwa (tworzywo) | 1 szt. | ~150 zł |
-| 5 | Gaśnica CO₂ 2kg | 1 szt. | ~100 zł |
-| 6 | Czujnik dymu/temperatury WiFi | 1 szt. | ~50 zł |
-| 7 | Materiały instalacyjne (opaski, koszulki, taśma elektr.) | — | ~20 zł |
-| 8 | [Raspberry Pi Zero 2W](https://botland.com.pl/moduly-i-zestawy-raspberry-pi-zero/20347-raspberry-pi-zero-2-w-512mb-ram-wifi-bt-42-5056561800004.html) | 512MB RAM, WiFi, BT | 72,90 zł |
-| 9 | [Samsung PRO Endurance 32GB microSDHC](https://www.x-kom.pl/p/1368965-karta-pamieci-microsd-samsung-32gb-microsdhc-pro-endurance-100mb-s.html) | 1 szt. | 29 zł |
-| 10 | Kabel USB-C → microUSB | ~25cm | ~10 zł |
+| 5 | Materiały instalacyjne (opaski, koszulki, taśma elektr.) | — | ~50 zł |
+| 6 | [Raspberry Pi Zero 2W 512MB RAM, WiFi, BT](https://botland.com.pl/moduly-i-zestawy-raspberry-pi-zero/20347-raspberry-pi-zero-2-w-512mb-ram-wifi-bt-42-5056561800004.html) | 1 szt. | 72,90 zł |
+| 7 | [Samsung PRO Endurance 32GB microSDHC](https://www.x-kom.pl/p/1368965-karta-pamieci-microsd-samsung-32gb-microsdhc-pro-endurance-100mb-s.html) | 1 szt. | 29 zł |
+| 8 | Kabel USB-C → microUSB | ~25cm | ~10 zł |
+| 9 | [Końcówka kablowa Cu ocynowana oczko 25mm² M8 (10 szt.)](https://allegro.pl/oferta/10x-koncowka-kablowa-miedziana-ocynowana-konektor-oczko-cu-25mm2-m8-2-17652361988) | 10 szt. | 14,40 zł |
+| 10 | [Kabel LGY H07V-K 25mm² czarny](https://allegro.pl/oferta/przewod-linka-kabel-jednozylowy-lgy-h07v-k-25mm2-czarny-1m-14119320982) | 1 m | 18,89 zł |
+| 11 | [Kabel LGY H07V-K 25mm² czerwony](https://allegro.pl/oferta/przewod-linka-kabel-jednozylowy-lgy-h07v-k-25mm2-czerwony-1m-14177221554) | 1 m | 18,89 zł |
 
-**Łączny koszt lokalnie: ~459 zł** 
+**Łączny koszt lokalnie: ~511 zł**
 
 ### 2.3 Dołączone gratis z ogniwami OOZING (nie kupować!)
 
@@ -61,7 +61,7 @@
 | Miedziana szyna zbiorcza (cynowana) | 8 szt. | Do połączeń szeregowych 8S — nie kupuj osobno! |
 | Osłona zacisku akumulatora | 8 kpl. | Nakładki na bieguny ogniw |
 
-**ŁĄCZNY KOSZT CAŁOŚCI: ~3 300 zł**
+**ŁĄCZNY KOSZT CAŁOŚCI: ~3 314 zł**
 
 ---
 
@@ -482,6 +482,59 @@ Mosquitto zainstalowany lokalnie lub na VPS — ten sam co w wersji z HA. ESP32 
 
 - **Ntfy.sh** — bezpłatny, open-source, aplikacja na Android/iOS, wysyłka przez prosty HTTP POST na `https://ntfy.sh/twoj_kanal`
 - **Pushover** — płatny jednorazowo (~5$), bardziej niezawodny, dobra aplikacja mobilna
+
+---
+
+### 5.4 Zero-export 3-fazowy — Zamel Supla + akumulator na 1 fazie
+
+#### Zasada działania
+
+Licznik Zamel Supla mierzy moc na 3 fazach i publikuje dane przez MQTT.
+Akumulator podłączony jest do **jednej fazy**. Skrypt odczytuje sumę mocy
+ze wszystkich faz i steruje mocą rozładowania inwertera tak, żeby saldo
+sieci wynosiło 0 W:
+
+```
+cel_moc_inwertera = -(P1 + P2 + P3)
+```
+
+Przykład: F1=−1000 W, F2=−1000 W, F3=−200 W → inwerter daje +2200 W → saldo = 0 W.
+Jeśli suma > 0 (nadwyżka solarna), inwerter jest wstrzymywany (moc = 0).
+
+#### Przepływ danych
+
+```
+[Licznik Supla 3-faz]
+    └─ MQTT (power_active F1/F2/F3) ──► [Mosquitto na RPi]
+                                              │
+                                         [skrypt Python]
+                                         liczy: cel = -(P1+P2+P3)
+                                              │
+                                         MQTT publish → grott/set/cmd
+                                              │
+                                    [grott] ──► [ECGSOLAX MIN-3K]
+                                               ustawia moc rozładowania AC
+```
+
+#### Dostępne technologie
+
+| Warstwa | Technologia | Uwagi |
+|---|---|---|
+| Pomiar mocy | Zamel Supla MQTT | tematy `supla/…/state/phases/N/power_active` [W] |
+| Broker | Mosquitto (RPi) | ten sam co dla JK BMS i grott |
+| Logika sterowania | Python `paho-mqtt` | pętla reagująca na każdy pomiar Supla |
+| Sterowanie inwerterem | grott `setreg` rejestr 60 | `ac_discharge_power` [W] przez MQTT |
+| Usługa systemd | `Restart=always` | działa ciągle w tle na RPi |
+
+#### Kwestie do uwzględnienia przy implementacji
+
+| Kwestia | Uwaga |
+|---|---|
+| Opóźnienie pomiaru | Supla publikuje z ~1–2 s opóźnieniem — zastosować martwą strefę (~50 W) i minimalny interwał komend (~2 s) |
+| Limit BMS | BMS odcina przy 100 A → max moc inwertera ≤ 2400 W (100 A × 24 V) |
+| Nadwyżka solarna | Gdy cel < 0, moc = 0 — ładowanie to zadanie inwertera solarnego |
+| Tematy Supla | Zweryfikuj na żywo: `mosquitto_sub -h localhost -t "supla/#" -v` |
+| Numer seryjny inwertera | Widoczny w logach grott: `journalctl -u grott \| grep serial` |
 
 ---
 
