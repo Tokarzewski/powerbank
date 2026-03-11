@@ -33,7 +33,7 @@
 | 8 | [Dual TYPE-C DC-DC 6V-36V→5V 3A](https://pl.aliexpress.com/item/1005007422356449.html) | 1PCS | 5,40 zł | ✅ Zamówione |
 | 9 | [Kabel USB-C do USB-C 60W 25cm](https://pl.aliexpress.com/item/1005006350363185.html) | czarny/0,25m × 2 | 2,68 zł | ✅ Zamówione |
 
-**Łączny koszt AliExpress: ~2 890 zł**
+**Łączny koszt AliExpress: ~2 841 zł**
 
 ### 2.2 Do kupienia lokalnie
 
@@ -61,7 +61,7 @@
 | Miedziana szyna zbiorcza (cynowana) | 8 szt. | Do połączeń szeregowych 8S — nie kupuj osobno! |
 | Osłona zacisku akumulatora | 8 kpl. | Nakładki na bieguny ogniw |
 
-**ŁĄCZNY KOSZT CAŁOŚCI: ~3 349 zł**
+**ŁĄCZNY KOSZT CAŁOŚCI: ~3 300 zł**
 
 ---
 
