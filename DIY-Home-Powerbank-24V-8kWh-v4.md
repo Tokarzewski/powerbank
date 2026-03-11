@@ -23,17 +23,17 @@
 
 | # | Komponent | Wariant | Cena | Link | Status |
 |---|---|---|---|---|---|
-| 1 | Ogniwa LiFePO4 OOZING 320Ah | 8 szt. | 1952 zł | [AliExpress](https://pl.aliexpress.com/item/1005007612738588.html) | ✅ Kupione wcześniej |
+| 1 | Ogniwa LiFePO4 OOZING 320Ah | 8 szt. | 1952 zł | [AliExpress](https://pl.aliexpress.com/item/1005008365255618.html) | ✅ Kupione wcześniej |
 | 2 | JK BMS B1A8S10PHC | 8S 100A BT+RS485 | 127,50 zł | [AliExpress](https://pl.aliexpress.com/item/1005007612738588.html) | ✅ Zamówione |
-| 3 | ECGSOLAX MIN-3K | 3KW 24V + WiFi | 604 zł | [AliExpress](https://pl.aliexpress.com/item/1005005524045001.html) | ✅ Zamówione |
-| 4 | ESP32-WROOM-32U DevKit | 1Set-Type-C (z anteną) | 26,69 zł | [AliExpress](https://pl.aliexpress.com/item/1005006285069274.html) | ✅ Zamówione |
-| 5 | Wemos D1 Mini TYPE-C | D1 Mini TYPE-C | 8,01 zł + 4,44 zł | [AliExpress](https://pl.aliexpress.com/item/1005003145192517.html) | ✅ Zamówione |
-| 6 | MAX3232 RS232→TTL | 1PCS | 5,29 zł | [AliExpress](https://pl.aliexpress.com/item/1005004685043134.html) | ✅ Zamówione |
-| 7 | LM2596 DC-DC Buck | 1PCS | 4,64 zł | [AliExpress](https://pl.aliexpress.com/item/1005009823447391.html) | ✅ Zamówione — do innych zastosowań 5V w przyszłości |
-| 8 | ANL fuse 200A + holder | 1Set/200A | 44,75 zł | [AliExpress](https://pl.aliexpress.com/item/1005004324587585.html) | ✅ Zamówione |
-| 9 | ANL holder osobny | Gniazdo/200A | 29,99 zł | [AliExpress](https://pl.aliexpress.com/item/1005003942847123.html) | ✅ Zamówione |
-| 10 | DC switch 1P 150A | 150A/1 | 54,99 zł | [AliExpress](https://pl.aliexpress.com/item/1005005041392302.html) | ✅ Zamówione |
-| 11 | Kabel DC 25mm² z końcówkami | ~2m | ~38 zł | [AliExpress](https://pl.aliexpress.com/item/1005003521415226.html) | ✅ Zamówione |
+| 3 | ECGSOLAX MIN-3K | 3KW 24V + WiFi | 604 zł | [AliExpress](https://pl.aliexpress.com/item/1005010303644717.html) | ✅ Zamówione |
+| 4 | ESP32-WROOM-32U DevKit | 1Set-Type-C (z anteną) | 26,69 zł | [AliExpress](https://pl.aliexpress.com/item/1005010136688086.html) | ✅ Zamówione |
+| 5 | Wemos D1 Mini TYPE-C | D1 Mini TYPE-C | 8,01 zł + 4,44 zł | [AliExpress](https://pl.aliexpress.com/item/1005010220008628.html) | ✅ Zamówione |
+| 6 | MAX3232 RS232→TTL | 1PCS | 5,29 zł | [AliExpress](https://pl.aliexpress.com/item/1005005199832742.html) | ✅ Zamówione |
+| 7 | LM2596 DC-DC Buck | 1PCS | 4,64 zł | [AliExpress](https://pl.aliexpress.com/item/1005007795274654.html) | ✅ Zamówione — do innych zastosowań 5V w przyszłości |
+| 8 | ANL fuse 200A + holder | 1Set/200A | 44,75 zł | [AliExpress](https://pl.aliexpress.com/item/1005005333041562.html) | ✅ Zamówione |
+| 9 | ANL holder osobny | Gniazdo/200A | 29,99 zł | [AliExpress](https://pl.aliexpress.com/item/1005001282853678.html) | ✅ Zamówione |
+| 10 | DC switch 1P 150A | 150A/1 | 54,99 zł | [AliExpress](https://pl.aliexpress.com/item/1005008516700696.html) | ✅ Zamówione |
+| 11 | Kabel DC 25mm² z końcówkami | ~2m | ~38 zł | [AliExpress](https://pl.aliexpress.com/item/1005003444381103.html) | ✅ Zamówione |
 | 12 | Dual TYPE-C DC-DC 6V-36V→5V 3A | 1PCS | 5,40 zł | [AliExpress](https://pl.aliexpress.com/item/1005007422356449.html) | ✅ Zamówione |
 | 13 | Kabel USB-C do USB-C 60W 25cm | czarny/0,25m × 2 | 2,68 zł | [AliExpress](https://pl.aliexpress.com/item/1005006350363185.html) | ✅ Zamówione |
 
