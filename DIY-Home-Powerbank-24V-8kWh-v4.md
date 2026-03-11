@@ -21,20 +21,17 @@
 
 ### 2.1 Zamówione z AliExpress
 
-| # | Komponent | Wariant | Cena | Link | Status |
-|---|---|---|---|---|---|
-| 1 | Ogniwa LiFePO4 OOZING 320Ah | 8 szt. | 1952 zł | [AliExpress](https://pl.aliexpress.com/item/1005008365255618.html) | ✅ Zamówione |
-| | ↳ *Gratis (na 8 szt.): taśma z włókna siatkowego ×2, płyta izolacyjna epoksydowa ×10, miedziana szyna zbiorcza ×8, osłona zacisku ×8 kpl.* | | | | |
-| 2 | JK BMS B1A8S10PHC | 8S 100A BT+RS485 | 127,50 zł | [AliExpress](https://pl.aliexpress.com/item/1005007612738588.html) | ✅ Zamówione |
-| 3 | ECGSOLAX MIN-3K | 3KW 24V + WiFi | 604 zł | [AliExpress](https://pl.aliexpress.com/item/1005010303644717.html) | ✅ Zamówione |
-| 4 | ESP32-WROOM-32U DevKit | 1Set-Type-C (z anteną) | 26,69 zł | [AliExpress](https://pl.aliexpress.com/item/1005010136688086.html) | ✅ Zamówione |
-| 5 | LM2596 DC-DC Buck | 1PCS | 4,64 zł | [AliExpress](https://pl.aliexpress.com/item/1005007795274654.html) | ✅ Zamówione — do innych zastosowań 5V w przyszłości |
-| 6 | ANL fuse 200A + holder | 1Set/200A | 44,75 zł | [AliExpress](https://pl.aliexpress.com/item/1005005333041562.html) | ✅ Zamówione |
-| 7 | ANL holder osobny | Gniazdo/200A | 29,99 zł | [AliExpress](https://pl.aliexpress.com/item/1005001282853678.html) | ✅ Zamówione |
-| 8 | DC switch 1P 150A | 150A/1 | 54,99 zł | [AliExpress](https://pl.aliexpress.com/item/1005008516700696.html) | ✅ Zamówione |
-| 9 | Kabel DC 25mm² z końcówkami | ~2m | ~38 zł | [AliExpress](https://pl.aliexpress.com/item/1005003444381103.html) | ✅ Zamówione |
-| 10 | Dual TYPE-C DC-DC 6V-36V→5V 3A | 1PCS | 5,40 zł | [AliExpress](https://pl.aliexpress.com/item/1005007422356449.html) | ✅ Zamówione |
-| 11 | Kabel USB-C do USB-C 60W 25cm | czarny/0,25m × 2 | 2,68 zł | [AliExpress](https://pl.aliexpress.com/item/1005006350363185.html) | ✅ Zamówione |
+| # | Komponent | Wariant | Cena | Status |
+|---|---|---|---|---|
+| 1 | [Ogniwa LiFePO4 OOZING 320Ah](https://pl.aliexpress.com/item/1005008365255618.html) | 8 szt. | 1952 zł | ✅ Zamówione |
+| 2 | [JK BMS B1A8S10PHC](https://pl.aliexpress.com/item/1005007612738588.html) | 8S 100A BT+RS485 | 127,50 zł | ✅ Zamówione |
+| 3 | [ECGSOLAX MIN-3K](https://pl.aliexpress.com/item/1005010303644717.html) | 3KW 24V + WiFi | 604 zł | ✅ Zamówione |
+| 4 | [ESP32-WROOM-32U DevKit](https://pl.aliexpress.com/item/1005010136688086.html) | 1Set-Type-C (z anteną) | 26,69 zł | ✅ Zamówione |
+| 5 | [ANL holder osobny](https://pl.aliexpress.com/item/1005001282853678.html) | Gniazdo/200A | 29,99 zł | ✅ Zamówione |
+| 6 | [DC switch 1P 150A](https://pl.aliexpress.com/item/1005008516700696.html) | 150A/1 | 54,99 zł |  ✅ Zamówione |
+| 7 | [Kabel DC 25mm² z końcówkami](https://pl.aliexpress.com/item/1005003444381103.html) | ~2m | ~38 zł |  ✅ Zamówione |
+| 8 | [Dual TYPE-C DC-DC 6V-36V→5V 3A](https://pl.aliexpress.com/item/1005007422356449.html) | 1PCS | 5,40 zł | ✅ Zamówione |
+| 9 | [Kabel USB-C do USB-C 60W 25cm](https://pl.aliexpress.com/item/1005006350363185.html) | czarny/0,25m × 2 | 2,68 zł | ✅ Zamówione |
 
 **Łączny koszt AliExpress: ~2 890 zł**
 
@@ -49,8 +46,8 @@
 | 5 | Gaśnica CO₂ 2kg | 1 szt. | ~100 zł |
 | 6 | Czujnik dymu/temperatury WiFi | 1 szt. | ~50 zł |
 | 7 | Materiały instalacyjne (opaski, koszulki, taśma elektr.) | — | ~20 zł |
-| 8 | Raspberry Pi Zero 2W | 512MB RAM, WiFi, BT | 72,90 zł (Botland) |
-| 9 | Karta microSD 32GB (Samsung/SanDisk Endurance) | 1 szt. | ~30 zł |
+| 8 | [Raspberry Pi Zero 2W](https://botland.com.pl/moduly-i-zestawy-raspberry-pi-zero/20347-raspberry-pi-zero-2-w-512mb-ram-wifi-bt-42-5056561800004.html) | 512MB RAM, WiFi, BT | 72,90 zł |
+| 9 | [Samsung PRO Endurance 32GB microSDHC](https://www.x-kom.pl/p/1368965-karta-pamieci-microsd-samsung-32gb-microsdhc-pro-endurance-100mb-s.html) | 1 szt. | 29 zł |
 | 10 | Kabel USB-C → microUSB | ~25cm | ~10 zł |
 
 **Łączny koszt lokalnie: ~459 zł** 
