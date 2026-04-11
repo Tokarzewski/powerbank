@@ -11,9 +11,17 @@
 | Pojemność | 320Ah (8S — napięcia się sumują, pojemność bez zmiany) |
 | Energia | ~8,19 kWh (użyteczna ~6,55 kWh przy DoD 80%) |
 | Topologia | AC-coupled (panele na mikroinwerterze EcoFlow Stream) |
-| Inwerter akumulatorowy | ECGSOLAX MIN-3K 24V + WiFi |
-| BMS | JK BMS B1A8S10PHC (8S, 100A, BT+RS485) |
-| Integracja | MQTT (Raspberry Pi Zero 2W + Python) |
+| Inwerter akumulatorowy | ECGSOLAX MIN-3K 24V + WiFi (klon Voltronic/MPP-Solar — protokół PI30 po RS232) |
+| BMS | JK BMS B1A8S10PHC (8S, 100A, BT+RS485), firmware 15.41 |
+| Integracja | ESP32 ESPHome → HAOS (BMS); Pi Zero 2W + mpp-solar → MQTT → HAOS (inwerter) |
+| HAOS | Home Assistant OS jako VM na lokalnej maszynie (nie na Pi Zero — Pi Zero 2W ma za mało RAM) |
+
+### Architektura komunikacji (decyzje projektowe)
+
+- **JK BMS → ESP32 z ESPHome (`syssi/esphome-jk-bms`, protokół `JK02_32S`).** Firmware BMS 15.41 używa nowszej generacji protokołu (chip TI, usługa BLE `f000ffc0`), dla której mpp-solar `jkbleio` jest popsuty (hardcoded write + parser nie obsługuje fragmentowanych ramek BLE). ESPHome to referencyjna implementacja i jedyna sprawdzona ścieżka dla firmware 15.x.
+- **ECGSOLAX MIN-3K to NIE klon Growatta** — to klon Voltronic/MPP-Solar (PIP/Axpert/InfiniSolar family). Dongle WiFi rozmawia ze złączem RJ45 oznaczonym RS232 używając poziomów RS232 (nie Ethernet). `grott` nie zadziała. Zamiast tego: wyciągnij dongle, podłącz kabel USB↔RJ45 (Axpert communication cable) do Pi Zero, użyj `mpp-solar` z protokołem `PI30`.
+- **JK BMS pozwala tylko na JEDNO aktywne połączenie BLE naraz.** Kiedy ESP32 jest podłączony, aplikacja JIKONG na telefonie ani skrypt bleak z laptopa nie mogą się połączyć. Przy commissioningu zawsze force-stop telefonu.
+- **Pi Zero 2W nie obsługuje HAOS.** 512 MB RAM jest poniżej minimum HA, nie ma oficjalnego obrazu dla Pi Zero 2W. HAOS idzie na oddzielną maszynę (VM na desktopie albo Pi 4/5), Pi Zero zostaje jako lokalny kolektor danych + most MQTT.
 
 ---
 
@@ -132,7 +140,7 @@ Akumulator 24V
               │                              (ESPHome / JK BMS Bluetooth)
               │
               └─ USB-C ──[kabel USB-C→microUSB]──► Raspberry Pi Zero 2W
-                                                    (Mosquitto / grott / Python)
+                                                    (Mosquitto / mpp-solar / Python)
 
 Zasilanie BMS — samodzielne:
     Ogniwa ──[sampling line 9-żyłowa]──► JK BMS (brak zewnętrznego zasilacza)
@@ -141,38 +149,36 @@ Zasilanie BMS — samodzielne:
 ### 3.5 Schemat komunikacji
 
 ```
-[JK BMS]
-    └─ Bluetooth ────────────────────────────────────► [ESP32]
-                                                        │ WiFi → MQTT
-                                                        │
-[ECGSOLAX MIN-3K]                                       │
-    └─ WiFi ──► [grott na RPi Zero 2W] ──────────────► MQTT
-                                                        │
-                                              [Mosquitto na RPi Zero 2W]
-                                                        │
-                                              [skrypt Python na RPi Zero 2W]
-                                                        │
-                                         [Automatyzacje zero-export]
-                                         [Monitoring SoC / temperatury]
-                                         [Powiadomienia push — ntfy.sh]
+[JK BMS] ──BLE (JK02_32S)──► [ESP32 + ESPHome] ──WiFi──► [Pi Zero 2W Mosquitto] ──bridge──► [HAOS VM]
+                                                               ▲
+[ECGSOLAX MIN-3K] ──RS232 (RJ45)──► [Pi Zero 2W: mpp-solar] ───┘
+                                          │
+                                          └─► Python automation (zero-export, alerty, ntfy)
 ```
 
-### 3.6 Schemat komunikacji inwertera — grott (WiFi)
+- **ESP32** publikuje do Mosquitto na Pi Zero (ESPHome → MQTT output, nie native API). Dzięki temu dane BMS są lokalne i nie zależą od HAOS.
+- **Pi Zero 2W** jest zawsze-włączonym kolektorem: Mosquitto broker, `mpp-solar` dla inwertera, skrypt automatyzacji. Most Mosquitto przekazuje tematy `jkbms/#` i `inverter/#` do HAOS gdy HAOS jest dostępny; buforuje gdy nie.
+- **HAOS VM** subskrybuje brokera Pi Zero i auto-wykrywa encje przez MQTT discovery. Reboot HAOS / offline ≠ utrata danych.
+
+### 3.6 Schemat komunikacji inwertera — mpp-solar RS232
 
 ```
 ECGSOLAX MIN-3K
-    └─ WiFi (wbudowane) ──► router domowy ──► Raspberry Pi Zero 2W
-                                                    │
-                                             grott (Python)
-                                             nasłuchuje ruch inwertera,
-                                             przechwytuje dane i publikuje na MQTT
-                                                    │
-                                             Mosquitto MQTT Broker (na tym samym RPi)
+    ├─ (wyjmij dongle WiFi — zajmuje gniazdo RJ45 RS232)
+    └─ gniazdo RJ45 oznaczone RS232 ──[kabel Axpert USB ↔ RJ45]──► Pi Zero 2W USB
+                                                                       │
+                                                                 mpp-solar -P PI30
+                                                                 (protokół QPIGS)
+                                                                       │
+                                                                 Mosquitto (localhost)
+                                                                       │
+                                                                  temat inverter/#
 ```
 
-> grott działa jako lokalny proxy — inwerter wysyła dane jak do chmury Growatt,
-> grott je przechwytuje i przekazuje na lokalny broker MQTT.
-> Brak kabli, brak dodatkowego sprzętu.
+> ECGSOLAX MIN-3K to klon Voltronic — używa protokołu tekstowego PI30 (QPIGS/QMOD/QPIRI)
+> po RS232 na RJ45. `mpp-solar` obsługuje to natywnie, włącznie z MQTT auto-discovery
+> dla HAOS. Dongle WiFi (chmura Sun Home) nie ma REST API — zostaje odłączony.
+> Kabel: szukaj "Axpert USB communication cable RJ45" lub "PIP inverter RS232 USB" (~20–40 zł).
 
 ---
 
@@ -266,24 +272,30 @@ ECGSOLAX MIN-3K
 - [ ] Zrestartuj: `sudo systemctl restart mosquitto`
 - [ ] Test: `mosquitto_sub -h localhost -t "#" -v`
 
-#### 6.4 Instalacja grott (dane z inwertera)
-- [ ] Zainstaluj Python i grott:
+#### 6.4 Instalacja mpp-solar (dane z inwertera ECGSOLAX, zamiast grott)
+- [ ] Kup kabel RS232 "Axpert USB communication cable" (RJ45 ↔ USB-A, CH340/PL2303 w środku)
+- [ ] Wyjmij oryginalny dongle WiFi z gniazda RJ45 oznaczonego RS232 w ECGSOLAX (blokuje port)
+- [ ] Podłącz kabel: RJ45 do inwertera, USB do Pi Zero — pojawi się `/dev/ttyUSB0`
+- [ ] Zainstaluj mpp-solar:
   ```
   sudo apt install -y python3-pip
-  pip3 install grott
+  pip3 install 'mppsolar[ble]'
   ```
-- [ ] Skonfiguruj `~/.grott/grott.ini`:
+- [ ] Testowe odczyty (sanity check):
   ```
-  [Generic]
-  mode = proxy
-  [MQTT]
-  host = localhost
-  port = 1883
+  mpp-solar -p /dev/ttyUSB0 -P PI30 -c QPIGS    # live dane (moc, napięcia, SoC)
+  mpp-solar -p /dev/ttyUSB0 -P PI30 -c QMOD     # tryb pracy (L=line, B=battery, ...)
+  mpp-solar -p /dev/ttyUSB0 -P PI30 -c QPIRI    # ustawienia ratingowe
   ```
-- [ ] Podłącz inwerter ECGSOLAX do WiFi przez menu LCD
-- [ ] Przekieruj ruch inwertera na RPi — w routerze ustaw statyczny DNS lub przekierowanie IP chmury Growatt na adres RPi
-- [ ] Uruchom grott jako usługa systemd (`Restart=always`)
-- [ ] Sprawdź dane: `mosquitto_sub -h localhost -t "energy/#" -v`
+- [ ] Jeśli QPIGS działa — skonfiguruj demona z wyjściem MQTT i HA discovery:
+  ```
+  mpp-solar -p /dev/ttyUSB0 -P PI30 -c QPIGS \
+            -q localhost --mqtttopic inverter \
+            -n "ECGSOLAX MIN-3K" --daemon
+  ```
+- [ ] Uruchom jako usługa systemd (`Restart=always`) — polling co 5–10 s
+- [ ] Sprawdź dane: `mosquitto_sub -h localhost -t "inverter/#" -v`
+- [ ] Na HAOS: Settings → Devices → MQTT → device powinno pojawić się automatycznie przez MQTT discovery
 
 #### 6.5 Instalacja skryptu Python (automatyzacje)
 - [ ] Zainstaluj biblioteki:
@@ -307,8 +319,8 @@ ECGSOLAX MIN-3K
 - [ ] Podłącz kabel USB-C 25cm → USB-C port 1 → ESP32
 - [ ] Podłącz kabel USB-C → microUSB → USB-C port 2 → Raspberry Pi Zero 2W
 - [ ] Odłącz kable USB od komputera — od teraz oba urządzenia zasilane z akumulatora
-- [ ] Sprawdź przez SSH że RPi działa, Mosquitto i grott aktywne
-- [ ] Sprawdź w MQTT Explorer: ESP32 (JK BMS) i grott (inwerter) publikują dane
+- [ ] Sprawdź przez SSH że RPi działa, Mosquitto i mpp-solar aktywne
+- [ ] Sprawdź w MQTT Explorer: ESP32 (JK BMS, temat `jkbms/#`) i mpp-solar (inwerter, temat `inverter/#`) publikują dane
 
 ### ETAP 9 — Bezpieczeństwo
 - [ ] Zamontuj czujnik dymu/temperatury WiFi nad akumulatorem
@@ -323,75 +335,29 @@ ECGSOLAX MIN-3K
 
 ### 5.1 ESPHome YAML — JK BMS (ESP32)
 
-```yaml
-esphome:
-  name: jk-bms
-  platform: ESP32
-  board: esp32dev
+- Konfiguracja ESPHome: [`jkbms.yaml`](jkbms.yaml)
+- Sekrety (WiFi, API, OTA): [`secrets.yaml`](secrets.yaml)
 
-wifi:
-  ssid: "TwojeSSID"
-  password: "TwojeHaslo"
-  ap:
-    ssid: "JK-BMS Fallback"
-    password: "fallback123"
+**Kluczowe ustawienia w jkbms.yaml:**
+- `protocol_version: JK02_32S` — wymagane dla firmware BMS 15.41 (TI-chip generation, usługa BLE `f000ffc0`)
+- `mac_address: C8:47:80:50:0F:8C` — MAC konkretnego BMS, odczytany z aplikacji JIKONG
+- `external_components: syssi/esphome-jk-bms@main`
+- komplet sensorów: 8× napięcie ogniwa + 8× rezystancja, SoC, moc ładowania/rozładowania, temperatury, cykle, balancing current, errors
+- zapisywalne switches (charging/discharging/balancer/emergency) i numbers (OVP/UVP/OTP/pojemność) — realnie sterują BMS, używać ostrożnie
 
-api:
-  encryption:
-    key: "twoj_klucz_api"
+**Flashowanie ESP32 z linii poleceń (zamiast web.esphome.io):**
 
-ota:
-  password: "twoje_haslo_ota"
-
-logger:
-
-mqtt:
-  broker: 192.168.1.xxx  # IP twojego serwera HA
-  port: 1883
-  topic_prefix: jkbms
-  discovery: true
-
-bluetooth_proxy:
-  active: true
-
-esp32_ble_tracker:
-  scan_parameters:
-    active: true
-
-external_components:
-  - source: github://syssi/esphome-jk-bms@main
-    refresh: 0d
-
-jk_bms_ble:
-  - id: jk_bms_ble_0
-    mac_address: "XX:XX:XX:XX:XX:XX"  # MAC z aplikacji JIKONG
-
-sensor:
-  - platform: jk_bms_ble
-    jk_bms_ble_id: jk_bms_ble_0
-    state_of_charge:
-      name: "JK BMS State of Charge"
-    total_voltage:
-      name: "JK BMS Total Voltage"
-    current:
-      name: "JK BMS Current"
-    power:
-      name: "JK BMS Power"
-    capacity_remaining:
-      name: "JK BMS Capacity Remaining"
-    min_cell_voltage:
-      name: "JK BMS Min Cell Voltage"
-    max_cell_voltage:
-      name: "JK BMS Max Cell Voltage"
-    delta_cell_voltage:
-      name: "JK BMS Delta Cell Voltage"
-    temperature_sensor_1:
-      name: "JK BMS Temperature 1"
-    temperature_sensor_2:
-      name: "JK BMS Temperature 2"
-    charging_cycles:
-      name: "JK BMS Cycles"
+```bash
+cd ~/Github/diy_powerbank_8kWh
+source .venv/bin/activate
+python -m ensurepip --upgrade   # jeśli venv bez pip (np. utworzony przez uv)
+pip install esphome
+esphome run jkbms.yaml
 ```
+
+Pierwsza kompilacja ~5 min (pobiera toolchain ESP32 + esp32-arduino-libs). Kolejne ~30 s. Wymaga grupy `dialout` (`sudo usermod -aG dialout $USER` + re-login).
+
+**Przed pierwszym uruchomieniem:** force-stop aplikacji JIKONG na telefonie — JK BMS pozwala tylko na JEDNO aktywne połączenie BLE, telefon zablokuje ESP32. W logach ESPHome powinno pojawić się `[jk_bms_ble] Connected` i napięcia ogniw w ciągu ~10 s.
 
 ### 5.2 Automatyzacje Home Assistant
 
@@ -422,7 +388,7 @@ automation:
   - alias: "Zero-export: ładuj gdy nadwyżka solarna"
     trigger:
       - platform: numeric_state
-        entity_id: sensor.grott_pv_power
+        entity_id: sensor.ecgsolax_min_3k_pv_input_power
         above: 500
     condition:
       - condition: numeric_state
@@ -431,8 +397,8 @@ automation:
     action:
       - service: mqtt.publish
         data:
-          topic: "grott/set/output_source_priority"
-          payload: "SBU"
+          topic: "inverter/cmd"
+          payload: "POP02"   # Solar-Battery-Utility (SBU)
 
   - alias: "Zero-export: rozładuj w godzinach szczytu"
     trigger:
@@ -445,8 +411,8 @@ automation:
     action:
       - service: mqtt.publish
         data:
-          topic: "grott/set/output_source_priority"
-          payload: "SUB"
+          topic: "inverter/cmd"
+          payload: "POP00"   # Utility first (grid priority)
 ```
 
 ### 5.3 Automatyzacje bez Home Assistant
@@ -467,10 +433,10 @@ Oba podejścia są równoważne. Python jest prostszy do uruchomienia na VPS/RPi
 | Zadanie | Mechanizm |
 |---|---|
 | Połączyć się z brokerem Mosquitto | klient MQTT — `connect(broker_ip, 1883)` |
-| Subskrybować 3 tematy | `jkbms/…/state_of_charge`, `jkbms/…/temperature`, `grott/…/pvpowertoday` |
+| Subskrybować 3 tematy | `jkbms/…/state_of_charge`, `jkbms/…/temperature`, `inverter/…/pv_input_power` |
 | Przy każdej wiadomości sprawdzić warunek | if/else na wartości liczbowej |
 | Wysłać alert | HTTP POST do Pushover lub Ntfy.sh |
-| Wysłać komendę do inwertera | MQTT publish → `grott/set/output_source_priority` |
+| Wysłać komendę do inwertera | subprocess: `mpp-solar -p /dev/ttyUSB0 -P PI30 -c POP02` (albo POP00 dla grid first) |
 | Uruchomić regułę o 17:00 | cron/scheduler w tle |
 | Działać ciągle jako usługa | systemd (`Restart=always`) |
 
@@ -505,15 +471,15 @@ Jeśli suma > 0 (nadwyżka solarna), inwerter jest wstrzymywany (moc = 0).
 
 ```
 [Licznik Supla 3-faz]
-    └─ MQTT (power_active F1/F2/F3) ──► [Mosquitto na RPi]
+    └─ MQTT (power_active F1/F2/F3) ──► [Mosquitto na RPi Zero]
                                               │
                                          [skrypt Python]
                                          liczy: cel = -(P1+P2+P3)
                                               │
-                                         MQTT publish → grott/set/cmd
+                                         wywołuje: mpp-solar -P PI30 -c POP<SBU|SUB>
                                               │
-                                    [grott] ──► [ECGSOLAX MIN-3K]
-                                               ustawia moc rozładowania AC
+                                    [mpp-solar RS232] ──► [ECGSOLAX MIN-3K]
+                                               przełącza priorytet wyjścia
 ```
 
 #### Dostępne technologie
@@ -521,20 +487,34 @@ Jeśli suma > 0 (nadwyżka solarna), inwerter jest wstrzymywany (moc = 0).
 | Warstwa | Technologia | Uwagi |
 |---|---|---|
 | Pomiar mocy | Zamel Supla MQTT | tematy `supla/…/state/phases/N/power_active` [W] |
-| Broker | Mosquitto (RPi) | ten sam co dla JK BMS i grott |
+| Broker | Mosquitto (Pi Zero) | ten sam co dla JK BMS (MQTT bridge z ESP32) i mpp-solar |
 | Logika sterowania | Python `paho-mqtt` | pętla reagująca na każdy pomiar Supla |
-| Sterowanie inwerterem | grott `setreg` rejestr 60 | `ac_discharge_power` [W] przez MQTT |
-| Usługa systemd | `Restart=always` | działa ciągle w tle na RPi |
+| Sterowanie inwerterem | `mpp-solar -P PI30` komendy POP/PCP/MUCHGC | Voltronic nie ma ciągłego setpointu mocy — tylko przełączanie priorytetu źródła i limitu prądu ładowania |
+| Usługa systemd | `Restart=always` | działa ciągle w tle na Pi Zero |
+
+#### Ograniczenia Voltronic PI30 (inaczej niż Growatt)
+
+**Ważne:** ECGSOLAX MIN-3K (klon Voltronic) **nie ma rejestru "ac_discharge_power"** jak Growatt SPH/MIN. Zamiast ciągłego setpointu mocy PI30 oferuje tylko dyskretne tryby:
+
+- `POP00` — Utility first (sieć pierwsza)
+- `POP01` — Solar first (słońce pierwsze) 
+- `POP02` — SBU (Solar → Battery → Utility — typowy tryb zero-export)
+- `PCP01/02` — Charger source priority (Solar/Solar+Utility/Only Solar)
+- `MUCHGC` — Max utility charging current [A]
+- `MCHGC` — Max total charging current [A]
+
+Dla zero-export na 1 fazie z Voltronic: praktycznie jest to **histereza między SBU i SUB** (przełączanie co kilka-kilkanaście sekund) zamiast płynnej regulacji mocy. Jeśli chcesz prawdziwej regulacji mocy, trzeba dodać zewnętrzny kontroler (relay na wyjściu AC inwertera albo smart-plug z MQTT-em odcinający obciążenie).
 
 #### Kwestie do uwzględnienia przy implementacji
 
 | Kwestia | Uwaga |
 |---|---|
-| Opóźnienie pomiaru | Supla publikuje z ~1–2 s opóźnieniem — zastosować martwą strefę (~50 W) i minimalny interwał komend (~2 s) |
+| Opóźnienie pomiaru | Supla publikuje z ~1–2 s opóźnieniem — zastosować martwą strefę (~50 W) i minimalny interwał komend (~5 s) |
 | Limit BMS | BMS odcina przy 100 A → max moc inwertera ≤ 2400 W (100 A × 24 V) |
-| Nadwyżka solarna | Gdy cel < 0, moc = 0 — ładowanie to zadanie inwertera solarnego |
+| Nadwyżka solarna | Gdy cel < 0, przełącz na `POP00` (grid first) — inwerter nie rozładowuje |
 | Tematy Supla | Zweryfikuj na żywo: `mosquitto_sub -h localhost -t "supla/#" -v` |
-| Numer seryjny inwertera | Widoczny w logach grott: `journalctl -u grott \| grep serial` |
+| Protokół inwertera | `mpp-solar -p /dev/ttyUSB0 -P PI30 -c QPIGS` — test podstawowego odczytu; `QMOD`, `QPIRI` dla trybu i ustawień |
+| Kabel RS232 | "Axpert USB communication cable" — RJ45 po stronie inwertera, USB po stronie Pi; szukaj na AliExpress/Allegro |
 
 ---
 
@@ -544,18 +524,42 @@ Jeśli suma > 0 (nadwyżka solarna), inwerter jest wstrzymywany (moc = 0).
 
 | Repozytorium | Opis | Link |
 |---|---|---|
-| johanmeijer/grott | Lokalny proxy dla inwerterów Growatt/ECGSOLAX → MQTT | https://github.com/johanmeijer/grott |
-| syssi/esphome-jk-bms | ESPHome component dla JK BMS | https://github.com/syssi/esphome-jk-bms |
-| home-assistant/core | Home Assistant | https://github.com/home-assistant/core |
+| syssi/esphome-jk-bms | ESPHome component dla JK BMS (firmware 15.x, JK02_32S) — **używane dla BMS** | https://github.com/syssi/esphome-jk-bms |
+| jblance/mpp-solar | Python lib dla Voltronic/MPP Solar PI30 (RS232 QPIGS) — **używane dla inwertera** | https://github.com/jblance/mpp-solar |
+| home-assistant/core | Home Assistant (HAOS jako VM na lokalnej maszynie) | https://github.com/home-assistant/core |
 | esphome/esphome | ESPHome platforma | https://github.com/esphome/esphome |
 
 ### Narzędzia online
 
 | Narzędzie | Link |
 |---|---|
-| ESPHome Web Flash | https://web.esphome.io |
-| grott — dokumentacja konfiguracji | https://github.com/johanmeijer/grott/wiki |
-| grott — integracja z MQTT | https://github.com/johanmeijer/grott/wiki/MQTT |
+| ESPHome Web Flash (tylko Chrome/Edge) | https://web.esphome.io |
+| ESPHome API encryption key generator | https://esphome.io/components/api.html |
+| syssi/esphome-jk-bms — dokumentacja protokołów | https://github.com/syssi/esphome-jk-bms#-supported-devices |
+| mpp-solar — obsługiwane komendy PI30 | https://github.com/jblance/mpp-solar/blob/master/mppsolar/protocols/pi30.py |
+
+### Narzędzia odrzucone (NIE używać dla tego projektu)
+
+| Narzędzie | Powód odrzucenia |
+|---|---|
+| `grott` (johanmeijer/grott) | ECGSOLAX MIN-3K to klon Voltronic, nie Growatta — grott nie rozpozna protokołu |
+| `mpp-solar` JK02_32 BLE | Działa dla firmware BMS <15; firmware 15.41 łamie `jkbleio` (hardcoded write + brak obsługi fragmentowanych ramek) |
+| `jkbms-brn` | Nieprzetestowane dla firmware 15.41, ten sam autor co mpp-solar → prawdopodobnie te same ograniczenia |
+| HAOS na Pi Zero 2W | 512 MB RAM < minimum HA, brak oficjalnego obrazu dla tego boardu |
+| HAOS native BLE integration | VM nie widzi hci0 hosta bez USB passthrough; chip BT na płycie głównej zwykle nie jest passthrough-owalny |
+| Sun Home REST API | Aplikacja chmurowa dla Voltronic-family rebrandów nie ma publicznego API; tylko reverse engineering przez mitmproxy |
+
+### Kluczowe dane dla tego konkretnego systemu
+
+| Parametr | Wartość | Źródło |
+|---|---|---|
+| BMS MAC BLE | `C8:47:80:50:0F:8C` | aplikacja JIKONG → Device Info |
+| BMS model string | `JK_B1A8S10P` | `jkbms -p <MAC> -P jk02_32 -c getInfo` |
+| BMS firmware | `15.41` | `getInfo` |
+| BMS hardware | `15H` | `getInfo` |
+| BMS serial | `51210430793` | `getInfo` |
+| ESPHome protocol_version | `JK02_32S` | zdeterminowane przez firmware + obecność usługi TI `f000ffc0` |
+| Inverter protocol | `PI30` (Voltronic QPIGS) | wnioskowane z formy dongle RS232 RJ45 + nazwy "MIN" jako Voltronic, nie Growatt |
 
 ---
 
@@ -599,4 +603,15 @@ Jeśli suma > 0 (nadwyżka solarna), inwerter jest wstrzymywany (moc = 0).
 
 ---
 
-*Wygenerowano: 11.03.2026 | Wersja: 4.1*
+*Wygenerowano: 11.03.2026 | Zaktualizowano: 11.04.2026 | Wersja: 4.2*
+
+**Zmiany w 4.2** (po commissioningu BMS + analiza inwertera):
+- §1 — dodane noty o protokołach (ECGSOLAX = Voltronic, nie Growatt; HAOS jako VM, nie na Pi Zero)
+- §1 — nowa sekcja "Architektura komunikacji (decyzje projektowe)" z uzasadnieniem każdego wyboru
+- §3.5, §3.6 — zaktualizowane schematy komunikacji (ESP32 → Mosquitto na Pi Zero; mpp-solar RS232 zamiast grott WiFi)
+- §5.1 — zastąpiono inline YAML linkiem do działającego `jkbms.yaml` (protokół `JK02_32S`, komplet sensorów/switches/numbers)
+- §5.2 — encje i topic-i zaktualizowane (`sensor.ecgsolax_min_3k_pv_input_power`, `inverter/cmd` z POP00/POP02)
+- §5.4 — przepisane zero-export na komendy Voltronic PI30 (POP/PCP/MUCHGC) + notka o ograniczeniach (brak ciągłego setpointu mocy)
+- §6.4 — instalacja mpp-solar po RS232 zamiast grott po WiFi (wymaga kabla Axpert USB↔RJ45)
+- §7 — nowa tabela "Narzędzia odrzucone" z uzasadnieniem (grott, mpp-solar BLE, jkbms-brn, HAOS na Pi Zero, Sun Home REST, HAOS native BLE)
+- §7 — dodane kluczowe dane systemowe (BMS MAC `C8:47:80:50:0F:8C`, firmware 15.41, hardware 15H, serial 51210430793)
