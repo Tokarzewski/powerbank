@@ -4,17 +4,17 @@
 
 ## 1. Założenia systemu
 
-| Parametr | Wartość |
-|---|---|
-| Konfiguracja | 8S Bjock (8 ogniw szeregowo, układ 2×4) |
-| Napięcie nominalne | 24V (8 × 3,2V) |
-| Pojemność | 320Ah (8S — napięcia się sumują, pojemność bez zmiany) |
-| Energia | ~8,19 kWh (użyteczna ~6,55 kWh przy DoD 80%) |
-| Topologia | AC-coupled (panele na mikroinwerterze EcoFlow Stream) |
-| Inwerter akumulatorowy | ECGSOLAX MIN-3K 24V + WiFi (klon Voltronic/MPP-Solar — protokół PI30 po RS232) |
-| BMS | JK BMS B1A8S10PHC (8S, 100A, BT+RS485), firmware 15.41 |
-| Integracja | ESP32 ESPHome → HAOS (BMS); Pi Zero 2W + mpp-solar → MQTT → HAOS (inwerter) |
-| HAOS | Home Assistant OS jako VM na lokalnej maszynie (nie na Pi Zero — Pi Zero 2W ma za mało RAM) |
+| Parametr               | Wartość                                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------------------- |
+| Konfiguracja           | 8S Bjock (8 ogniw szeregowo, układ 2×4)                                                     |
+| Napięcie nominalne     | 24V (8 × 3,2V)                                                                              |
+| Pojemność              | 320Ah (8S — napięcia się sumują, pojemność bez zmiany)                                      |
+| Energia                | ~8,19 kWh (użyteczna ~6,55 kWh przy DoD 80%)                                                |
+| Topologia              | AC-coupled (panele na mikroinwerterze EcoFlow Stream)                                       |
+| Inwerter akumulatorowy | ECGSOLAX MIN-3K 24V + WiFi (klon Voltronic/MPP-Solar — protokół PI30 po RS232)              |
+| BMS                    | JK BMS B1A8S10PHC (8S, 100A, BT+RS485), firmware 15.41                                      |
+| Integracja             | ESP32 ESPHome → HAOS (BMS); Pi Zero 2W + mpp-solar → MQTT → HAOS (inwerter)                 |
+| HAOS                   | Home Assistant OS jako VM na lokalnej maszynie (nie na Pi Zero — Pi Zero 2W ma za mało RAM) |
 
 ### Architektura komunikacji (decyzje projektowe)
 
@@ -29,45 +29,45 @@
 
 ### 2.1 Zamówione z AliExpress
 
-| # | Komponent | Wariant | Cena | Status |
-|---|---|---|---|---|
-| 1 | [Ogniwa LiFePO4 OOZING 320Ah](https://pl.aliexpress.com/item/1005008365255618.html) | 8 szt. | 1952 zł | ✅ Zamówione |
-| 2 | [JK BMS B1A8S10PHC](https://pl.aliexpress.com/item/1005007612738588.html) | 8S 100A BT+RS485 | 127,50 zł | ✅ Zamówione |
-| 3 | [ECGSOLAX MIN-3K](https://pl.aliexpress.com/item/1005010303644717.html) | 3KW 24V + WiFi | 604 zł | ✅ Zamówione |
-| 4 | [ESP32-WROOM-32U DevKit](https://pl.aliexpress.com/item/1005010136688086.html) | 1Set-Type-C (z anteną) | 26,69 zł | ✅ Zamówione |
-| 5 | [ANL holder osobny](https://pl.aliexpress.com/item/1005001282853678.html) | Gniazdo/200A | 29,99 zł | ✅ Zamówione |
-| 6 | [DC switch 1P 150A](https://pl.aliexpress.com/item/1005008516700696.html) | 150A/1 | 54,99 zł |  ✅ Zamówione |
-| 7 | [Dual TYPE-C DC-DC 6V-36V→5V 3A](https://pl.aliexpress.com/item/1005007422356449.html) | 1PCS | 5,40 zł | ✅ Zamówione |
-| 8 | [Kabel USB-C do USB-C 60W 25cm](https://pl.aliexpress.com/item/1005006350363185.html) | czarny/0,25m × 2 | 2,68 zł | ✅ Zamówione |
+| #   | Komponent                                                                              | Wariant                | Cena      | Status      |
+| --- | -------------------------------------------------------------------------------------- | ---------------------- | --------- | ----------- |
+| 1   | [Ogniwa LiFePO4 OOZING 320Ah](https://pl.aliexpress.com/item/1005008365255618.html)    | 8 szt.                 | 1952 zł   | ✅ Zamówione |
+| 2   | [JK BMS B1A8S10PHC](https://pl.aliexpress.com/item/1005007612738588.html)              | 8S 100A BT+RS485       | 127,50 zł | ✅ Zamówione |
+| 3   | [ECGSOLAX MIN-3K](https://pl.aliexpress.com/item/1005010303644717.html)                | 3KW 24V + WiFi         | 604 zł    | ✅ Zamówione |
+| 4   | [ESP32-WROOM-32U DevKit](https://pl.aliexpress.com/item/1005010136688086.html)         | 1Set-Type-C (z anteną) | 26,69 zł  | ✅ Zamówione |
+| 5   | [ANL holder osobny](https://pl.aliexpress.com/item/1005001282853678.html)              | Gniazdo/200A           | 29,99 zł  | ✅ Zamówione |
+| 6   | [DC switch 1P 150A](https://pl.aliexpress.com/item/1005008516700696.html)              | 150A/1                 | 54,99 zł  | ✅ Zamówione |
+| 7   | [Dual TYPE-C DC-DC 6V-36V→5V 3A](https://pl.aliexpress.com/item/1005007422356449.html) | 1PCS                   | 5,40 zł   | ✅ Zamówione |
+| 8   | [Kabel USB-C do USB-C 60W 25cm](https://pl.aliexpress.com/item/1005006350363185.html)  | czarny/0,25m × 2       | 2,68 zł   | ✅ Zamówione |
 
 **Łączny koszt AliExpress: ~2 803 zł**
 
 ### 2.2 Do kupienia lokalnie
 
-| # | Komponent | Ilość | Cena szac. |
-|---|---|---|---|
-| 1 | Śruby M6×12mm | 25 szt. | ~10 zł |
-| 2 | Podkładki M6 | 50 szt. | ~8 zł |
-| 3 | Nakrętki M6 | 25 szt. | ~8 zł |
-| 4 | Obudowa niemetalowa na ogniwa (tworzywo) | 1 szt. | ~150 zł |
-| 5 | Materiały instalacyjne (opaski, koszulki, taśma elektr.) | — | ~50 zł |
-| 6 | [Raspberry Pi Zero 2W 512MB RAM, WiFi, BT](https://botland.com.pl/moduly-i-zestawy-raspberry-pi-zero/20347-raspberry-pi-zero-2-w-512mb-ram-wifi-bt-42-5056561800004.html) | 1 szt. | 72,90 zł |
-| 7 | [Samsung PRO Endurance 32GB microSDHC](https://www.x-kom.pl/p/1368965-karta-pamieci-microsd-samsung-32gb-microsdhc-pro-endurance-100mb-s.html) | 1 szt. | 29 zł |
-| 8 | Kabel USB-C → microUSB | ~25cm | ~10 zł |
-| 9 | [Końcówka kablowa Cu ocynowana oczko 25mm² M8 (10 szt.)](https://allegro.pl/oferta/10x-koncowka-kablowa-miedziana-ocynowana-konektor-oczko-cu-25mm2-m8-2-17652361988) | 10 szt. | 14,40 zł |
-| 10 | [Kabel LGY H07V-K 25mm² czarny](https://allegro.pl/oferta/przewod-linka-kabel-jednozylowy-lgy-h07v-k-25mm2-czarny-1m-14119320982) | 1 m | 18,89 zł |
-| 11 | [Kabel LGY H07V-K 25mm² czerwony](https://allegro.pl/oferta/przewod-linka-kabel-jednozylowy-lgy-h07v-k-25mm2-czerwony-1m-14177221554) | 1 m | 18,89 zł |
+| #   | Komponent                                                                                                                                                                 | Ilość   | Cena szac. |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ---------- |
+| 1   | Śruby M6×12mm                                                                                                                                                             | 25 szt. | ~10 zł     |
+| 2   | Podkładki M6                                                                                                                                                              | 50 szt. | ~8 zł      |
+| 3   | Nakrętki M6                                                                                                                                                               | 25 szt. | ~8 zł      |
+| 4   | Obudowa niemetalowa na ogniwa (tworzywo)                                                                                                                                  | 1 szt.  | ~150 zł    |
+| 5   | Materiały instalacyjne (opaski, koszulki, taśma elektr.)                                                                                                                  | —       | ~50 zł     |
+| 6   | [Raspberry Pi Zero 2W 512MB RAM, WiFi, BT](https://botland.com.pl/moduly-i-zestawy-raspberry-pi-zero/20347-raspberry-pi-zero-2-w-512mb-ram-wifi-bt-42-5056561800004.html) | 1 szt.  | 72,90 zł   |
+| 7   | [Samsung PRO Endurance 32GB microSDHC](https://www.x-kom.pl/p/1368965-karta-pamieci-microsd-samsung-32gb-microsdhc-pro-endurance-100mb-s.html)                            | 1 szt.  | 29 zł      |
+| 8   | Kabel USB-C → microUSB                                                                                                                                                    | ~25cm   | ~10 zł     |
+| 9   | [Końcówka kablowa Cu ocynowana oczko 25mm² M8 (10 szt.)](https://allegro.pl/oferta/10x-koncowka-kablowa-miedziana-ocynowana-konektor-oczko-cu-25mm2-m8-2-17652361988)     | 10 szt. | 14,40 zł   |
+| 10  | [Kabel LGY H07V-K 25mm² czarny](https://allegro.pl/oferta/przewod-linka-kabel-jednozylowy-lgy-h07v-k-25mm2-czarny-1m-14119320982)                                         | 1 m     | 18,89 zł   |
+| 11  | [Kabel LGY H07V-K 25mm² czerwony](https://allegro.pl/oferta/przewod-linka-kabel-jednozylowy-lgy-h07v-k-25mm2-czerwony-1m-14177221554)                                     | 1 m     | 18,89 zł   |
 
 **Łączny koszt lokalnie: ~511 zł**
 
 ### 2.3 Dołączone gratis z ogniwami OOZING (nie kupować!)
 
-| Komponent | Ilość (na 8 ogniw) | Uwagi |
-|---|---|---|
-| Taśma z włókna siatkowego | 2 szt. | Do spinania pakietu ogniw |
-| Płyta izolacyjna epoksydowa | 10 szt. | Separatory między ogniwami i na końcach |
-| Miedziana szyna zbiorcza (cynowana) | 8 szt. | Do połączeń szeregowych 8S — nie kupuj osobno! |
-| Osłona zacisku akumulatora | 8 kpl. | Nakładki na bieguny ogniw |
+| Komponent                           | Ilość (na 8 ogniw) | Uwagi                                          |
+| ----------------------------------- | ------------------ | ---------------------------------------------- |
+| Taśma z włókna siatkowego           | 2 szt.             | Do spinania pakietu ogniw                      |
+| Płyta izolacyjna epoksydowa         | 10 szt.            | Separatory między ogniwami i na końcach        |
+| Miedziana szyna zbiorcza (cynowana) | 8 szt.             | Do połączeń szeregowych 8S — nie kupuj osobno! |
+| Osłona zacisku akumulatora          | 8 kpl.             | Nakładki na bieguny ogniw                      |
 
 **ŁĄCZNY KOSZT CAŁOŚCI: ~3 314 zł**
 
@@ -140,7 +140,7 @@ Akumulator 24V
               │                              (ESPHome / JK BMS Bluetooth)
               │
               └─ USB-C ──[kabel USB-C→microUSB]──► Raspberry Pi Zero 2W
-                                                    (Mosquitto / mpp-solar / Python)
+                                                    (Mosquitto / grott / Python)
 
 Zasilanie BMS — samodzielne:
     Ogniwa ──[sampling line 9-żyłowa]──► JK BMS (brak zewnętrznego zasilacza)
@@ -185,23 +185,27 @@ ECGSOLAX MIN-3K
 ## 4. Kolejność montażu
 
 ### ETAP 0 — Przygotowanie IT (przed dostawą sprzętu)
+
 - [ ] Pobierz Raspberry Pi Imager: https://www.raspberrypi.com/software/
 - [ ] Pobierz Raspberry Pi OS Lite (64-bit)
 - [ ] Przygotuj kartę microSD 32GB
 - [ ] Przygotuj obudowę niemetalową (otwory wentylacyjne Ø8mm, otwory kablowe)
 
 ### ETAP 1 — Przygotowanie ogniw
+
 - [ ] Sprawdź napięcie każdego ogniwa multimetrem — powinno być ~3,2–3,3V
 - [ ] Wyrównaj napięcia (top-balance): ładuj każde ogniwo do 3,45V i rozładuj do 3,2V
 - [ ] Oczyść zaciski z tlenków (papier ścierny 400, alkohol izopropylowy)
 - [ ] Ułóż ogniwa w konfiguracji 8S Bjock (2 rzędy po 4, bieguny na zmianę +/-, B+ i B- po tej samej stronie)
 
 ### ETAP 2 — Połączenia szyn prądowych
+
 - [ ] Podłącz szyny zbiorcze (gratis z ogniwami): nakrętka M6 + 2 podkładki na kołek ogniwa
 - [ ] **Jeszcze NIE podłączaj B+ i B- do BMS**
 - [ ] Zmierz napięcie pakietu: powinno być ~25,6V (8 × 3,2V)
 
 ### ETAP 3 — BMS
+
 - [ ] Podłącz sampling line (9 przewodów z zestawu BMS):
   - B0 → minus ogniwa 1 = GND pakietu
   - B1 → styk między ogniwem 1 i 2
@@ -214,12 +218,14 @@ ECGSOLAX MIN-3K
 - [ ] Sprawdź: 8 ogniw widocznych, napięcia i SoC poprawne
 
 ### ETAP 4 — Zabezpieczenia DC
+
 - [ ] Zainstaluj bezpiecznik ANL 200A na przewodzie B+
 - [ ] Zainstaluj wyłącznik DC 1P 150A w szeregu na B+
 - [ ] Podłącz B- bezpośrednio do P-
 - [ ] **Wyłącznik w pozycji OFF**
 
 ### ETAP 5 — Inwerter ECGSOLAX MIN-3K
+
 - [ ] Kabel 25mm²: P+ → zacisk B+ inwertera
 - [ ] Kabel 25mm²: P- → zacisk B- inwertera
 - [ ] Włącz wyłącznik DC
@@ -234,6 +240,7 @@ ECGSOLAX MIN-3K
 ### ETAP 6 — Uruchomienie Raspberry Pi Zero 2W
 
 #### 6.1 Przygotowanie karty microSD
+
 - [ ] Pobierz **Raspberry Pi Imager**: https://www.raspberrypi.com/software/
 - [ ] Wybierz system: **Raspberry Pi OS Lite (64-bit)** — bez GUI
 - [ ] Przed wgraniem kliknij ikonę ⚙ (ustawienia zaawansowane) i ustaw:
@@ -245,26 +252,32 @@ ECGSOLAX MIN-3K
 - [ ] Wgraj obraz na kartę microSD, włóż kartę do RPi
 
 #### 6.2 Pierwsze uruchomienie i aktualizacja
+
 - [ ] Podłącz RPi do zasilania (tymczasowo przez kabel USB do komputera lub zasilacza 5V)
 - [ ] Poczekaj ~60 sekund na boot
 - [ ] Znajdź adres IP w routerze lub: `ping powerbank.local`
 - [ ] Zaloguj przez SSH: `ssh pi@powerbank.local`
 - [ ] Zaktualizuj system:
+  
   ```
   sudo apt update && sudo apt upgrade -y
   ```
 
 #### 6.3 Instalacja Mosquitto (broker MQTT)
+
 - [ ] Zainstaluj:
+  
   ```
   sudo apt install -y mosquitto mosquitto-clients
   ```
 - [ ] Włącz autostart:
+  
   ```
   sudo systemctl enable mosquitto
   sudo systemctl start mosquitto
   ```
 - [ ] Skonfiguruj nasłuchiwanie na wszystkich interfejsach (`/etc/mosquitto/mosquitto.conf`):
+  
   ```
   listener 1883
   allow_anonymous true
@@ -273,21 +286,25 @@ ECGSOLAX MIN-3K
 - [ ] Test: `mosquitto_sub -h localhost -t "#" -v`
 
 #### 6.4 Instalacja mpp-solar (dane z inwertera ECGSOLAX, zamiast grott)
+
 - [ ] Kup kabel RS232 "Axpert USB communication cable" (RJ45 ↔ USB-A, CH340/PL2303 w środku)
 - [ ] Wyjmij oryginalny dongle WiFi z gniazda RJ45 oznaczonego RS232 w ECGSOLAX (blokuje port)
 - [ ] Podłącz kabel: RJ45 do inwertera, USB do Pi Zero — pojawi się `/dev/ttyUSB0`
 - [ ] Zainstaluj mpp-solar:
+  
   ```
   sudo apt install -y python3-pip
   pip3 install 'mppsolar[ble]'
   ```
 - [ ] Testowe odczyty (sanity check):
+  
   ```
   mpp-solar -p /dev/ttyUSB0 -P PI30 -c QPIGS    # live dane (moc, napięcia, SoC)
   mpp-solar -p /dev/ttyUSB0 -P PI30 -c QMOD     # tryb pracy (L=line, B=battery, ...)
   mpp-solar -p /dev/ttyUSB0 -P PI30 -c QPIRI    # ustawienia ratingowe
   ```
 - [ ] Jeśli QPIGS działa — skonfiguruj demona z wyjściem MQTT i HA discovery:
+  
   ```
   mpp-solar -p /dev/ttyUSB0 -P PI30 -c QPIGS \
             -q localhost --mqtttopic inverter \
@@ -298,7 +315,9 @@ ECGSOLAX MIN-3K
 - [ ] Na HAOS: Settings → Devices → MQTT → device powinno pojawić się automatycznie przez MQTT discovery
 
 #### 6.5 Instalacja skryptu Python (automatyzacje)
+
 - [ ] Zainstaluj biblioteki:
+  
   ```
   pip3 install paho-mqtt schedule requests
   ```
@@ -307,6 +326,7 @@ ECGSOLAX MIN-3K
 - [ ] Sprawdź logi: `journalctl -u powerbank-automation -f`
 
 ### ETAP 7 — BMS Bluetooth (ESP32)
+
 - [ ] Podłącz ESP32 USB-C do komputera
 - [ ] Wejdź na https://web.esphome.io → wgraj YAML z sekcji 5.1
 - [ ] Zeskanuj Bluetooth w apce JIKONG → zanotuj MAC adres BMS
@@ -314,15 +334,17 @@ ECGSOLAX MIN-3K
 - [ ] Sprawdź w MQTT Explorer: topic jkbms/sensor/state_of_charge i inne
 
 ### ETAP 8 — Zasilanie elektroniki (Dual TYPE-C)
+
 - [ ] Podłącz moduł Dual TYPE-C DC-DC: B+ i B- akumulatora (wejście 24V)
 - [ ] **Najpierw sprawdź multimetrem napięcie na wyjściu USB-C: powinno być 5,0V**
 - [ ] Podłącz kabel USB-C 25cm → USB-C port 1 → ESP32
 - [ ] Podłącz kabel USB-C → microUSB → USB-C port 2 → Raspberry Pi Zero 2W
 - [ ] Odłącz kable USB od komputera — od teraz oba urządzenia zasilane z akumulatora
-- [ ] Sprawdź przez SSH że RPi działa, Mosquitto i mpp-solar aktywne
-- [ ] Sprawdź w MQTT Explorer: ESP32 (JK BMS, temat `jkbms/#`) i mpp-solar (inwerter, temat `inverter/#`) publikują dane
+- [ ] Sprawdź przez SSH że RPi działa, Mosquitto i grott aktywne
+- [ ] Sprawdź w MQTT Explorer: ESP32 (JK BMS) i grott (inwerter) publikują dane
 
 ### ETAP 9 — Bezpieczeństwo
+
 - [ ] Zamontuj czujnik dymu/temperatury WiFi nad akumulatorem
 - [ ] Sprawdź że skrypt Python (sekcja 5.3) wysyła alert przy temp > 45°C
 - [ ] Umieść gaśnicę CO₂ 2kg w pobliżu i oznacz
@@ -339,6 +361,7 @@ ECGSOLAX MIN-3K
 - Sekrety (WiFi, API, OTA): [`secrets.yaml`](secrets.yaml)
 
 **Kluczowe ustawienia w jkbms.yaml:**
+
 - `protocol_version: JK02_32S` — wymagane dla firmware BMS 15.41 (TI-chip generation, usługa BLE `f000ffc0`)
 - `mac_address: C8:47:80:50:0F:8C` — MAC konkretnego BMS, odczytany z aplikacji JIKONG
 - `external_components: syssi/esphome-jk-bms@main`
@@ -388,7 +411,7 @@ automation:
   - alias: "Zero-export: ładuj gdy nadwyżka solarna"
     trigger:
       - platform: numeric_state
-        entity_id: sensor.ecgsolax_min_3k_pv_input_power
+        entity_id: sensor.grott_pv_power
         above: 500
     condition:
       - condition: numeric_state
@@ -397,8 +420,8 @@ automation:
     action:
       - service: mqtt.publish
         data:
-          topic: "inverter/cmd"
-          payload: "POP02"   # Solar-Battery-Utility (SBU)
+          topic: "grott/set/output_source_priority"
+          payload: "SBU"
 
   - alias: "Zero-export: rozładuj w godzinach szczytu"
     trigger:
@@ -411,8 +434,8 @@ automation:
     action:
       - service: mqtt.publish
         data:
-          topic: "inverter/cmd"
-          payload: "POP00"   # Utility first (grid priority)
+          topic: "grott/set/output_source_priority"
+          payload: "SUB"
 ```
 
 ### 5.3 Automatyzacje bez Home Assistant
@@ -421,24 +444,24 @@ Alternatywa dla sekcji 5.2 — działa na dowolnym serwerze, VPS lub Raspberry P
 
 #### Wybór języka
 
-| Język | Biblioteka MQTT | Harmonogram | Powiadomienia |
-|---|---|---|---|
-| **Python** | `paho-mqtt` | `schedule` lub `APScheduler` | `requests` → Pushover / Ntfy.sh |
-| **JavaScript (Node.js)** | `mqtt` (npm) | `node-cron` | `axios` → Pushover / Ntfy.sh |
+| Język                    | Biblioteka MQTT | Harmonogram                  | Powiadomienia                   |
+| ------------------------ | --------------- | ---------------------------- | ------------------------------- |
+| **Python**               | `paho-mqtt`     | `schedule` lub `APScheduler` | `requests` → Pushover / Ntfy.sh |
+| **JavaScript (Node.js)** | `mqtt` (npm)    | `node-cron`                  | `axios` → Pushover / Ntfy.sh    |
 
 Oba podejścia są równoważne. Python jest prostszy do uruchomienia na VPS/RPi; Node.js jeśli już znasz JS.
 
 #### Co musi robić skrypt
 
-| Zadanie | Mechanizm |
-|---|---|
-| Połączyć się z brokerem Mosquitto | klient MQTT — `connect(broker_ip, 1883)` |
-| Subskrybować 3 tematy | `jkbms/…/state_of_charge`, `jkbms/…/temperature`, `inverter/…/pv_input_power` |
-| Przy każdej wiadomości sprawdzić warunek | if/else na wartości liczbowej |
-| Wysłać alert | HTTP POST do Pushover lub Ntfy.sh |
-| Wysłać komendę do inwertera | subprocess: `mpp-solar -p /dev/ttyUSB0 -P PI30 -c POP02` (albo POP00 dla grid first) |
-| Uruchomić regułę o 17:00 | cron/scheduler w tle |
-| Działać ciągle jako usługa | systemd (`Restart=always`) |
+| Zadanie                                  | Mechanizm                                                                |
+| ---------------------------------------- | ------------------------------------------------------------------------ |
+| Połączyć się z brokerem Mosquitto        | klient MQTT — `connect(broker_ip, 1883)`                                 |
+| Subskrybować 3 tematy                    | `jkbms/…/state_of_charge`, `jkbms/…/temperature`, `grott/…/pvpowertoday` |
+| Przy każdej wiadomości sprawdzić warunek | if/else na wartości liczbowej                                            |
+| Wysłać alert                             | HTTP POST do Pushover lub Ntfy.sh                                        |
+| Wysłać komendę do inwertera              | MQTT publish → `grott/set/output_source_priority`                        |
+| Uruchomić regułę o 17:00                 | cron/scheduler w tle                                                     |
+| Działać ciągle jako usługa               | systemd (`Restart=always`)                                               |
 
 #### Broker MQTT
 
@@ -484,13 +507,13 @@ Jeśli suma > 0 (nadwyżka solarna), inwerter jest wstrzymywany (moc = 0).
 
 #### Dostępne technologie
 
-| Warstwa | Technologia | Uwagi |
-|---|---|---|
-| Pomiar mocy | Zamel Supla MQTT | tematy `supla/…/state/phases/N/power_active` [W] |
-| Broker | Mosquitto (Pi Zero) | ten sam co dla JK BMS (MQTT bridge z ESP32) i mpp-solar |
-| Logika sterowania | Python `paho-mqtt` | pętla reagująca na każdy pomiar Supla |
+| Warstwa               | Technologia                                | Uwagi                                                                                                    |
+| --------------------- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| Pomiar mocy           | Zamel Supla MQTT                           | tematy `supla/…/state/phases/N/power_active` [W]                                                         |
+| Broker                | Mosquitto (Pi Zero)                        | ten sam co dla JK BMS (MQTT bridge z ESP32) i mpp-solar                                                  |
+| Logika sterowania     | Python `paho-mqtt`                         | pętla reagująca na każdy pomiar Supla                                                                    |
 | Sterowanie inwerterem | `mpp-solar -P PI30` komendy POP/PCP/MUCHGC | Voltronic nie ma ciągłego setpointu mocy — tylko przełączanie priorytetu źródła i limitu prądu ładowania |
-| Usługa systemd | `Restart=always` | działa ciągle w tle na Pi Zero |
+| Usługa systemd        | `Restart=always`                           | działa ciągle w tle na Pi Zero                                                                           |
 
 #### Ograniczenia Voltronic PI30 (inaczej niż Growatt)
 
@@ -507,14 +530,14 @@ Dla zero-export na 1 fazie z Voltronic: praktycznie jest to **histereza między 
 
 #### Kwestie do uwzględnienia przy implementacji
 
-| Kwestia | Uwaga |
-|---|---|
-| Opóźnienie pomiaru | Supla publikuje z ~1–2 s opóźnieniem — zastosować martwą strefę (~50 W) i minimalny interwał komend (~5 s) |
-| Limit BMS | BMS odcina przy 100 A → max moc inwertera ≤ 2400 W (100 A × 24 V) |
-| Nadwyżka solarna | Gdy cel < 0, przełącz na `POP00` (grid first) — inwerter nie rozładowuje |
-| Tematy Supla | Zweryfikuj na żywo: `mosquitto_sub -h localhost -t "supla/#" -v` |
+| Kwestia            | Uwaga                                                                                                          |
+| ------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Opóźnienie pomiaru | Supla publikuje z ~1–2 s opóźnieniem — zastosować martwą strefę (~50 W) i minimalny interwał komend (~5 s)     |
+| Limit BMS          | BMS odcina przy 100 A → max moc inwertera ≤ 2400 W (100 A × 24 V)                                              |
+| Nadwyżka solarna   | Gdy cel < 0, przełącz na `POP00` (grid first) — inwerter nie rozładowuje                                       |
+| Tematy Supla       | Zweryfikuj na żywo: `mosquitto_sub -h localhost -t "supla/#" -v`                                               |
 | Protokół inwertera | `mpp-solar -p /dev/ttyUSB0 -P PI30 -c QPIGS` — test podstawowego odczytu; `QMOD`, `QPIRI` dla trybu i ustawień |
-| Kabel RS232 | "Axpert USB communication cable" — RJ45 po stronie inwertera, USB po stronie Pi; szukaj na AliExpress/Allegro |
+| Kabel RS232        | "Axpert USB communication cable" — RJ45 po stronie inwertera, USB po stronie Pi; szukaj na AliExpress/Allegro  |
 
 ---
 
@@ -522,44 +545,44 @@ Dla zero-export na 1 fazie z Voltronic: praktycznie jest to **histereza między 
 
 ### GitHub — repozytoria do obserwowania
 
-| Repozytorium | Opis | Link |
-|---|---|---|
-| syssi/esphome-jk-bms | ESPHome component dla JK BMS (firmware 15.x, JK02_32S) — **używane dla BMS** | https://github.com/syssi/esphome-jk-bms |
-| jblance/mpp-solar | Python lib dla Voltronic/MPP Solar PI30 (RS232 QPIGS) — **używane dla inwertera** | https://github.com/jblance/mpp-solar |
-| home-assistant/core | Home Assistant (HAOS jako VM na lokalnej maszynie) | https://github.com/home-assistant/core |
-| esphome/esphome | ESPHome platforma | https://github.com/esphome/esphome |
+| Repozytorium         | Opis                                                                              | Link                                    |
+| -------------------- | --------------------------------------------------------------------------------- | --------------------------------------- |
+| syssi/esphome-jk-bms | ESPHome component dla JK BMS (firmware 15.x, JK02_32S) — **używane dla BMS**      | https://github.com/syssi/esphome-jk-bms |
+| jblance/mpp-solar    | Python lib dla Voltronic/MPP Solar PI30 (RS232 QPIGS) — **używane dla inwertera** | https://github.com/jblance/mpp-solar    |
+| home-assistant/core  | Home Assistant (HAOS jako VM na lokalnej maszynie)                                | https://github.com/home-assistant/core  |
+| esphome/esphome      | ESPHome platforma                                                                 | https://github.com/esphome/esphome      |
 
 ### Narzędzia online
 
-| Narzędzie | Link |
-|---|---|
-| ESPHome Web Flash (tylko Chrome/Edge) | https://web.esphome.io |
-| ESPHome API encryption key generator | https://esphome.io/components/api.html |
-| syssi/esphome-jk-bms — dokumentacja protokołów | https://github.com/syssi/esphome-jk-bms#-supported-devices |
-| mpp-solar — obsługiwane komendy PI30 | https://github.com/jblance/mpp-solar/blob/master/mppsolar/protocols/pi30.py |
+| Narzędzie                                      | Link                                                                        |
+| ---------------------------------------------- | --------------------------------------------------------------------------- |
+| ESPHome Web Flash (tylko Chrome/Edge)          | https://web.esphome.io                                                      |
+| ESPHome API encryption key generator           | https://esphome.io/components/api.html                                      |
+| syssi/esphome-jk-bms — dokumentacja protokołów | https://github.com/syssi/esphome-jk-bms#-supported-devices                  |
+| mpp-solar — obsługiwane komendy PI30           | https://github.com/jblance/mpp-solar/blob/master/mppsolar/protocols/pi30.py |
 
 ### Narzędzia odrzucone (NIE używać dla tego projektu)
 
-| Narzędzie | Powód odrzucenia |
-|---|---|
-| `grott` (johanmeijer/grott) | ECGSOLAX MIN-3K to klon Voltronic, nie Growatta — grott nie rozpozna protokołu |
-| `mpp-solar` JK02_32 BLE | Działa dla firmware BMS <15; firmware 15.41 łamie `jkbleio` (hardcoded write + brak obsługi fragmentowanych ramek) |
-| `jkbms-brn` | Nieprzetestowane dla firmware 15.41, ten sam autor co mpp-solar → prawdopodobnie te same ograniczenia |
-| HAOS na Pi Zero 2W | 512 MB RAM < minimum HA, brak oficjalnego obrazu dla tego boardu |
-| HAOS native BLE integration | VM nie widzi hci0 hosta bez USB passthrough; chip BT na płycie głównej zwykle nie jest passthrough-owalny |
-| Sun Home REST API | Aplikacja chmurowa dla Voltronic-family rebrandów nie ma publicznego API; tylko reverse engineering przez mitmproxy |
+| Narzędzie                   | Powód odrzucenia                                                                                                    |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `grott` (johanmeijer/grott) | ECGSOLAX MIN-3K to klon Voltronic, nie Growatta — grott nie rozpozna protokołu                                      |
+| `mpp-solar` JK02_32 BLE     | Działa dla firmware BMS <15; firmware 15.41 łamie `jkbleio` (hardcoded write + brak obsługi fragmentowanych ramek)  |
+| `jkbms-brn`                 | Nieprzetestowane dla firmware 15.41, ten sam autor co mpp-solar → prawdopodobnie te same ograniczenia               |
+| HAOS na Pi Zero 2W          | 512 MB RAM < minimum HA, brak oficjalnego obrazu dla tego boardu                                                    |
+| HAOS native BLE integration | VM nie widzi hci0 hosta bez USB passthrough; chip BT na płycie głównej zwykle nie jest passthrough-owalny           |
+| Sun Home REST API           | Aplikacja chmurowa dla Voltronic-family rebrandów nie ma publicznego API; tylko reverse engineering przez mitmproxy |
 
 ### Kluczowe dane dla tego konkretnego systemu
 
-| Parametr | Wartość | Źródło |
-|---|---|---|
-| BMS MAC BLE | `C8:47:80:50:0F:8C` | aplikacja JIKONG → Device Info |
-| BMS model string | `JK_B1A8S10P` | `jkbms -p <MAC> -P jk02_32 -c getInfo` |
-| BMS firmware | `15.41` | `getInfo` |
-| BMS hardware | `15H` | `getInfo` |
-| BMS serial | `51210430793` | `getInfo` |
-| ESPHome protocol_version | `JK02_32S` | zdeterminowane przez firmware + obecność usługi TI `f000ffc0` |
-| Inverter protocol | `PI30` (Voltronic QPIGS) | wnioskowane z formy dongle RS232 RJ45 + nazwy "MIN" jako Voltronic, nie Growatt |
+| Parametr                 | Wartość                  | Źródło                                                                          |
+| ------------------------ | ------------------------ | ------------------------------------------------------------------------------- |
+| BMS MAC BLE              | `C8:47:80:50:0F:8C`      | aplikacja JIKONG → Device Info                                                  |
+| BMS model string         | `JK_B1A8S10P`            | `jkbms -p <MAC> -P jk02_32 -c getInfo`                                          |
+| BMS firmware             | `15.41`                  | `getInfo`                                                                       |
+| BMS hardware             | `15H`                    | `getInfo`                                                                       |
+| BMS serial               | `51210430793`            | `getInfo`                                                                       |
+| ESPHome protocol_version | `JK02_32S`               | zdeterminowane przez firmware + obecność usługi TI `f000ffc0`                   |
+| Inverter protocol        | `PI30` (Voltronic QPIGS) | wnioskowane z formy dongle RS232 RJ45 + nazwy "MIN" jako Voltronic, nie Growatt |
 
 ---
 
@@ -567,51 +590,40 @@ Dla zero-export na 1 fazie z Voltronic: praktycznie jest to **histereza między 
 
 ### 7.1 Parametry ogniwa OOZING 320Ah (dane producenta)
 
-| Parametr | Wartość |
-|---|---|
-| Pojemność | 300–320 Ah |
-| Napięcie nominalne | 3,2V |
-| Max napięcie ładowania (abs.) | 3,65V |
-| Napięcie odcięcia rozładowania (abs.) | 2,5V |
-| Max prąd ładowania | 0,5C (160A) |
-| Max prąd rozładowania | 1C / 3C (320A / 960A) |
-| Impedancja wewnętrzna | ≤0,3 mΩ |
-| Temperatura ładowania | 0–60°C |
-| Temperatura rozładowania | -30–60°C |
-| Żywotność | ≥8000 cykli |
-| Wymiary (dł.×szer.×wys.) | 174,26 × 71,5 × 207,31 ±0,5 mm |
-| Waga | 5,45 ±0,3 kg |
-| Rozmiar śruby | M6 |
+| Parametr                              | Wartość                        |
+| ------------------------------------- | ------------------------------ |
+| Pojemność                             | 300–320 Ah                     |
+| Napięcie nominalne                    | 3,2V                           |
+| Max napięcie ładowania (abs.)         | 3,65V                          |
+| Napięcie odcięcia rozładowania (abs.) | 2,5V                           |
+| Max prąd ładowania                    | 0,5C (160A)                    |
+| Max prąd rozładowania                 | 1C / 3C (320A / 960A)          |
+| Impedancja wewnętrzna                 | ≤0,3 mΩ                        |
+| Temperatura ładowania                 | 0–60°C                         |
+| Temperatura rozładowania              | -30–60°C                       |
+| Żywotność                             | ≥8000 cykli                    |
+| Wymiary (dł.×szer.×wys.)              | 174,26 × 71,5 × 207,31 ±0,5 mm |
+| Waga                                  | 5,45 ±0,3 kg                   |
+| Rozmiar śruby                         | M6                             |
 
 ### 7.2 Parametry pakietu 8S (konfiguracja projektu)
 
-| Parametr | Wartość | Obliczenie |
-|---|---|---|
-| Napięcie nominalne pakietu | 25,6V | 8 × 3,2V |
-| Napięcie ładowania (BMS cutoff) | 27,6V | 8 × 3,45V |
-| Napięcie ładowania (abs. max) | 29,2V | 8 × 3,65V |
-| Napięcie odcięcia rozładowania (BMS) | 22,4V | 8 × 2,8V |
-| Napięcie odcięcia rozładowania (abs.) | 20,0V | 8 × 2,5V |
-| Prąd ładowania (ustawienie inwertera) | 80A | ~0,25C — dla długiej żywotności |
-| Prąd rozładowania ciągły max | 100A | limit BMS B1A8S10PHC |
-| Energia całkowita | 8,19 kWh | 25,6V × 320Ah |
-| Energia użyteczna (DoD 80%) | 6,55 kWh | 8,19 × 0,8 |
-| Waga pakietu (same ogniwa) | 43,6 kg | 8 × 5,45 kg |
-| Wymiary pakietu Bjock 8S (same ogniwa) | 286 × 349 × 207 mm | 4×71,5 mm / 2×174 mm / wys. ogniwa |
-| Wymiary pakietu Bjock 8S (z szynami + BMS) | 286 × 349 × 237 mm | +~30 mm na szyny i BMS |
-| Min. wymiary wewnętrzne obudowy | 306 × 369 × 257 mm | +10 mm margines z każdej strony (×2) |
+| Parametr                                   | Wartość            | Obliczenie                           |
+| ------------------------------------------ | ------------------ | ------------------------------------ |
+| Napięcie nominalne pakietu                 | 25,6V              | 8 × 3,2V                             |
+| Napięcie ładowania (BMS cutoff)            | 27,6V              | 8 × 3,45V                            |
+| Napięcie ładowania (abs. max)              | 29,2V              | 8 × 3,65V                            |
+| Napięcie odcięcia rozładowania (BMS)       | 22,4V              | 8 × 2,8V                             |
+| Napięcie odcięcia rozładowania (abs.)      | 20,0V              | 8 × 2,5V                             |
+| Prąd ładowania (ustawienie inwertera)      | 80A                | ~0,25C — dla długiej żywotności      |
+| Prąd rozładowania ciągły max               | 100A               | limit BMS B1A8S10PHC                 |
+| Energia całkowita                          | 8,19 kWh           | 25,6V × 320Ah                        |
+| Energia użyteczna (DoD 80%)                | 6,55 kWh           | 8,19 × 0,8                           |
+| Waga pakietu (same ogniwa)                 | 43,6 kg            | 8 × 5,45 kg                          |
+| Wymiary pakietu Bjock 8S (same ogniwa)     | 286 × 349 × 207 mm | 4×71,5 mm / 2×174 mm / wys. ogniwa   |
+| Wymiary pakietu Bjock 8S (z szynami + BMS) | 286 × 349 × 237 mm | +~30 mm na szyny i BMS               |
+| Min. wymiary wewnętrzne obudowy            | 306 × 369 × 257 mm | +10 mm margines z każdej strony (×2) |
 
 ---
 
-*Wygenerowano: 11.03.2026 | Zaktualizowano: 11.04.2026 | Wersja: 4.2*
-
-**Zmiany w 4.2** (po commissioningu BMS + analiza inwertera):
-- §1 — dodane noty o protokołach (ECGSOLAX = Voltronic, nie Growatt; HAOS jako VM, nie na Pi Zero)
-- §1 — nowa sekcja "Architektura komunikacji (decyzje projektowe)" z uzasadnieniem każdego wyboru
-- §3.5, §3.6 — zaktualizowane schematy komunikacji (ESP32 → Mosquitto na Pi Zero; mpp-solar RS232 zamiast grott WiFi)
-- §5.1 — zastąpiono inline YAML linkiem do działającego `jkbms.yaml` (protokół `JK02_32S`, komplet sensorów/switches/numbers)
-- §5.2 — encje i topic-i zaktualizowane (`sensor.ecgsolax_min_3k_pv_input_power`, `inverter/cmd` z POP00/POP02)
-- §5.4 — przepisane zero-export na komendy Voltronic PI30 (POP/PCP/MUCHGC) + notka o ograniczeniach (brak ciągłego setpointu mocy)
-- §6.4 — instalacja mpp-solar po RS232 zamiast grott po WiFi (wymaga kabla Axpert USB↔RJ45)
-- §7 — nowa tabela "Narzędzia odrzucone" z uzasadnieniem (grott, mpp-solar BLE, jkbms-brn, HAOS na Pi Zero, Sun Home REST, HAOS native BLE)
-- §7 — dodane kluczowe dane systemowe (BMS MAC `C8:47:80:50:0F:8C`, firmware 15.41, hardware 15H, serial 51210430793)
+*Wygenerowano: 12.04.2026 | Wersja: 4.2*
