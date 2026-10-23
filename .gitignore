@@ -1,3 +1,7 @@
 .claude
 # direnv cache
 .direnv/
+# ESPHome local state and generated build output
+.esphome/
+# Local ESPHome secrets (copy secrets.yaml.example)
+secrets.yaml
