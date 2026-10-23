@@ -358,7 +358,7 @@ ECGSOLAX MIN-3K
 ### 5.1 ESPHome YAML — JK BMS (ESP32)
 
 - Konfiguracja ESPHome: [`jkbms.yaml`](jkbms.yaml)
-- Sekrety (WiFi, API, OTA): [`secrets.yaml`](secrets.yaml)
+- Sekrety (WiFi, API, OTA): lokalny plik `secrets.yaml` (poza gitem); wzór: [`secrets.yaml.example`](secrets.yaml.example)
 
 **Kluczowe ustawienia w jkbms.yaml:**
 
